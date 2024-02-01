@@ -1,0 +1,76 @@
+.aboutMe {
+  // background-color: aqua;
+
+  &Container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+
+    &PhotoContainer {
+    //   background-color: red;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+
+      &Quote {
+        // background-color: blue;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        margin-top: 64px;
+
+        &P {
+          margin: 0;
+          padding: 0;
+          font-size: large;
+        }
+      }
+
+      &Photo {
+        width: 400px;
+        border-radius: 4px;
+        margin-top: 64px;
+        margin-bottom: 256px;
+      }
+    }
+
+    &TextContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 40%;
+
+      &P {
+        background-color: #f7da7a;
+        padding: 32px 64px;
+        margin: 0;
+        text-align: justify;
+        border-radius: 4px;
+      }
+
+      &H {
+        // background-color: red;
+        display: flex;
+        width: 100%;
+        height: 100%;
+
+        &DivL {
+          // background-color: black;
+          width: 70%;
+        }
+
+        &DivR {
+          // background-color: black;
+        }
+
+        &Line {
+          background-color: #f7da7a;
+          width: 6px;
+        }
+      }
+    }
+  }
+}

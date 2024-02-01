@@ -1,0 +1,42 @@
+.homepaget {
+  background-color: blueviolet;
+}
+
+.slideshow {
+  background-color: black;
+  display: flex;
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+
+  &Img {
+    width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    position: absolute;
+    // top: 0;
+    opacity: 0.7;
+    animation: imgOpacity 4s 1 ease;
+  }
+
+  &Buttons {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+
+    &Button {
+      margin: 8px;
+    }
+  }
+}
+
+@keyframes imgOpacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.7;
+  }
+}

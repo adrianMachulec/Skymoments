@@ -1,0 +1,16 @@
+.footer {
+  background-color: #f7da7a;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &Box{
+    // background-color: blue;
+    margin: 32px 16px;
+  }
+}
+
+p{
+  margin: 8px 0;
+}

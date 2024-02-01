@@ -1,0 +1,204 @@
+@import "../../sass/myFonts.scss";
+
+.homepage {
+  // background-color: aqua;
+
+  &PhotoContainer {
+    display: flex;
+    position: relative;
+    height: calc(100vh - 12vh);
+    width: 100%;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+
+    &Photo {
+      min-height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    &Quote {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+
+      &P {
+        margin: 0;
+        padding: 0;
+        color: white;
+        font-size: x-large;
+        text-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  &Content {
+    position: relative;
+    top: -20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &TextContainer {
+      background-color: #f7da7a;
+      width: 70%;
+      min-width: 64vh;
+      border-radius: 4px;
+
+      &P {
+        margin: 0;
+        padding: 32px 48px;
+        font-size: x-large;
+        text-align: justify;
+      }
+    }
+
+    &AboutMe {
+      // background-color: aqua;
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+
+      &PhotoContainer {
+        display: flex;
+        margin: 256px 0;
+
+        &Photo {
+          width: 312px;
+          border-radius: 4px;
+        }
+      }
+
+      &TextContainer {
+        // background-color: red;
+        display: flex;
+        align-items: center;
+        width: 50%;
+        min-width: 64vh;
+
+        &P {
+          // background-color: aquamarine;
+          font-size: x-large;
+          text-align: justify;
+          margin: 32px;
+        }
+      }
+
+      &Line {
+        background-color: #f7da7a;
+        width: 6px;
+      }
+    }
+
+    &Portfolio {
+      background-color: #f7da7a;
+      width: 70%;
+      min-width: 64vh;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+
+      &Title {
+        display: flex;
+        justify-content: center;
+        font-size: x-large;
+        margin: 32px 0;
+
+        &P {
+          margin: 0;
+          padding: 0;
+        }
+      }
+
+      &Container {
+        display: flex;
+        justify-content: space-evenly;
+        margin-bottom: 32px;
+
+        &Box {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          margin: 0 16px;
+
+          &Photo {
+            max-width: 512px;
+            width: 100%;
+            border-radius: 4px;
+          }
+
+          &Title {
+            background-color: rgba(255, 255, 255, 0.2);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            backdrop-filter: blur(2px);
+            padding: 4px;
+            border-radius: 8px;
+
+            &P {
+              margin: 8px 16px;
+              padding: 0;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+
+    &Contact {
+      // background-color: red;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 128px 0;
+
+      &Header {
+        // background-color: aqua;
+        text-align: center;
+        font-size: x-large;
+        margin: 32px 0;
+      }
+
+      &Container {
+        display: flex;
+        justify-content: space-around;
+        &Box {
+          // background-color: blue;
+          height: 256px;
+          width: 312px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          &Icon{
+            color: black;
+          }
+
+          &Title{
+            color: black;
+            margin-top: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+a{
+  text-decoration: none;
+}

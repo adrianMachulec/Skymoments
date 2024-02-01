@@ -1,0 +1,54 @@
+@import '../../sass/myFonts.scss';
+
+.navbar {
+  // background-color: red;
+  display: flex;
+  height: 12vh;
+
+  &LogoContainer {
+    // background-color: antiquewhite;
+    display: flex;
+  }
+
+  &MenuContainer {
+    // background-color: brown;
+    display: flex;
+    width: 100%;
+  }
+}
+
+.menu {
+  // background-color: red;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+
+  &Element {
+    // background-color: aqua;
+    &Link {
+      text-decoration: none;
+      color: black;
+      font-family: 'Lobster', sans-serif;
+      font-size: x-large;
+
+      &Active{
+        @extend .menuElementLink;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.logo {
+  z-index: 2;
+  margin: 8px;
+  height: 16vh;
+  // background-color: rgba(255, 255, 255, 0.2);
+  // backdrop-filter: blur(2px);
+  // padding: 4px;
+  // border-radius: 16px;
+}
