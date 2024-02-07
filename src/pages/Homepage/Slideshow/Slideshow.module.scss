@@ -1,0 +1,40 @@
+.slideshow {
+  background-color: black;
+  display: flex;
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow-y: hidden;
+
+  // &Img {
+  //   width: 100%;
+  //   min-height: 100%;
+  //   object-fit: cover;
+  //   position: absolute;
+  //   // top: 0;
+  //   opacity: 0.7;
+  // }
+
+  &Buttons {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+
+    &Button {
+      margin: 8px;
+    }
+  }
+
+  &Data {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+
+    &P {
+      margin: 8px 32px;
+      color: red;
+    }
+  }
+}
