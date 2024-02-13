@@ -1,5 +1,49 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Slideshow.module.scss";
+import styled, { keyframes, css } from "styled-components";
+
+const moveSlideVert = keyframes`
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-200px);
+  }
+`;
+
+const moveSlideHor = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-200px);
+  }
+`;
+
+const animationMoveSlideVert = css`
+  animation: ${moveSlideVert} 10s linear infinite;
+`;
+
+const animationMoveSlideHor = css`
+  animation: ${moveSlideHor} 10s linear infinite;
+`;
+
+const AnimatedImageVert = styled.img`
+  width: 100%;
+  minheight: 100%;
+  objectfit: cover;
+  position: absolute;
+  opacity: 0.7;
+  ${animationMoveSlideVert}
+`;
+
+const AnimatedImageHor = styled.img`
+  height: 100%;
+  objectfit: cover;
+  position: absolute;
+  opacity: 0.7;
+  ${animationMoveSlideHor}
+`;
 
 export default function Slideshow(props) {
   const [slides, setSlides] = useState([]);
@@ -16,14 +60,6 @@ export default function Slideshow(props) {
     x: 0,
     y: 0,
   });
-
-  const [slideStyle, setSlideStyle] = useState({
-    width: '100%',
-    minHeight: '100%',
-    objectFit: 'cover',
-    position: 'absolute',
-    opacity: '0.7'
-  })
 
   function importAll(r) {
     let images = {};
@@ -48,13 +84,11 @@ export default function Slideshow(props) {
 
   function updateSize() {
     setWindowSize({
-      ...windowSize,
       x: window.innerWidth,
       y: window.innerHeight,
     });
 
     setImgSize({
-      ...imgSize,
       x: slideRef.current.width,
       y: slideRef.current.height,
     });
@@ -81,6 +115,7 @@ export default function Slideshow(props) {
     return () => {
       window.removeEventListener("resize", updateSize);
     };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -89,21 +124,35 @@ export default function Slideshow(props) {
       x: slideRef.current.width,
       y: slideRef.current.height,
     });
+    // eslint-disable-next-line
   }, [slides]);
 
   const testB = () => {
     console.log("test button");
   };
 
+  useEffect(() => {
+    // console.log(imgSize)
+    // console.log(windowSize)
+    // eslint-disable-next-line
+  }, [imgSize, windowSize]);
+
   return (
     <div className={styles.slideshow}>
-      <img
-        className={styles.slideshowImg}
-        src={slides[slideNo]}
-        alt="zdjęcie pokazowe"
-        ref={slideRef}
-        style={slideStyle}
-      />
+      {windowSize.x > windowSize.y ? (
+        <AnimatedImageVert
+          src={slides[slideNo]}
+          alt="zdjęcie pokazowe"
+          ref={slideRef}
+        />
+      ) : (
+        <AnimatedImageHor
+          src={slides[slideNo]}
+          alt="zdjęcie pokazowe"
+          ref={slideRef}
+        />
+      )}
+
       <div className={styles.slideshowButtons}>
         <button
           onClick={(e) => changeSlide(-1, e)}
