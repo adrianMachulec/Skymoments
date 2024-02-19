@@ -7,7 +7,7 @@ const moveSlideVert = keyframes`
     transform: translateY(0);
   }
   to {
-    transform: translateY(-200px);
+    transform: translateY(-436px);
   }
 `;
 
@@ -21,11 +21,11 @@ const moveSlideHor = keyframes`
 `;
 
 const animationMoveSlideVert = css`
-  animation: ${moveSlideVert} 10s linear infinite;
+  animation: ${moveSlideVert} 30s linear infinite;
 `;
 
 const animationMoveSlideHor = css`
-  animation: ${moveSlideHor} 10s linear infinite;
+  animation: ${moveSlideHor} 30s linear infinite;
 `;
 
 const AnimatedImageVert = styled.img`
@@ -48,6 +48,7 @@ const AnimatedImageHor = styled.img`
 export default function Slideshow(props) {
   const [slides, setSlides] = useState([]);
   const [slideNo, setSlideNo] = useState(0);
+  const [slideKey, setSlideKey] = useState(1);
 
   const slideRef = useRef(null);
 
@@ -60,6 +61,8 @@ export default function Slideshow(props) {
     x: 0,
     y: 0,
   });
+
+  const [offset, setOffset] = useState(0);
 
   function importAll(r) {
     let images = {};
@@ -80,21 +83,22 @@ export default function Slideshow(props) {
     } else {
       slideNo > 0 ? setSlideNo(slideNo + dir) : setSlideNo(slides.length - 1);
     }
-  }
-
-  function updateSize() {
-    setWindowSize({
-      x: window.innerWidth,
-      y: window.innerHeight,
-    });
-
-    setImgSize({
-      x: slideRef.current.width,
-      y: slideRef.current.height,
-    });
+    setSlideKey(slideKey * -1)
   }
 
   useEffect(() => {
+    function updateSize() {
+      setWindowSize({
+        x: window.innerWidth,
+        y: window.innerHeight,
+      });
+
+      setImgSize({
+        x: slideRef.current.width,
+        y: slideRef.current.height,
+      });
+    }
+
     setSlides(
       importAll(
         require.context(
@@ -110,8 +114,8 @@ export default function Slideshow(props) {
       x: window.innerWidth,
       y: window.innerHeight,
     });
-
     window.addEventListener("resize", updateSize);
+
     return () => {
       window.removeEventListener("resize", updateSize);
     };
@@ -119,11 +123,24 @@ export default function Slideshow(props) {
   }, []);
 
   useEffect(() => {
-    setImgSize({
-      ...imgSize,
-      x: slideRef.current.width,
-      y: slideRef.current.height,
-    });
+    const handleImageLoad = () => {
+      setImgSize({
+        ...imgSize,
+        x: slideRef.current.width,
+        y: slideRef.current.height,
+      });
+    };
+
+    if (slideRef.current) {
+      slideRef.current.addEventListener("load", handleImageLoad);
+    }
+
+    return () => {
+      if (slideRef.current) {
+        slideRef.current.removeEventListener("load", handleImageLoad);
+      }
+    };
+
     // eslint-disable-next-line
   }, [slides]);
 
@@ -132,10 +149,18 @@ export default function Slideshow(props) {
   };
 
   useEffect(() => {
-    // console.log(imgSize)
-    // console.log(windowSize)
+    windowSize.x > windowSize.y
+      ? windowSize.y - imgSize.y < 0
+        ? setOffset(windowSize.y - imgSize.y)
+        : setOffset(0)
+      : setOffset(windowSize.x - imgSize.x);
+
     // eslint-disable-next-line
   }, [imgSize, windowSize]);
+
+  useEffect(() => {
+    console.log(offset);
+  }, [offset]);
 
   return (
     <div className={styles.slideshow}>
@@ -144,12 +169,14 @@ export default function Slideshow(props) {
           src={slides[slideNo]}
           alt="zdjęcie pokazowe"
           ref={slideRef}
+          key={slideKey}
         />
       ) : (
         <AnimatedImageHor
           src={slides[slideNo]}
           alt="zdjęcie pokazowe"
           ref={slideRef}
+          key={slideKey}
         />
       )}
 
@@ -175,6 +202,7 @@ export default function Slideshow(props) {
         <p className={styles.slideshowDataP}>imgY: {imgSize.y}</p>
         <p className={styles.slideshowDataP}>wX: {windowSize.x}</p>
         <p className={styles.slideshowDataP}>wY: {windowSize.y}</p>
+        <p className={styles.slideshowDataP}>offset: {offset}</p>
       </div>
     </div>
   );

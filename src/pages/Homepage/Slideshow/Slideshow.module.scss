@@ -6,11 +6,6 @@
   width: 100%;
   overflow: hidden;
 
-  // &Img {
-  //   opacity: 0.2 !important;
-    
-  // }
-
   &Buttons {
     position: absolute;
     bottom: 10px;
@@ -32,14 +27,5 @@
       margin: 8px 32px;
       color: red;
     }
-  }
-}
-
-@keyframes imgTest {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(200px);
   }
 }
