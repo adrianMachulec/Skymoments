@@ -2,67 +2,90 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Slideshow.module.scss";
 import styled, { keyframes, css } from "styled-components";
 
-const moveSlideVert = keyframes`
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-436px);
-  }
+const moveSlideVert = (offset) => keyframes`
+0% {
+  transform: translateY(0);
+  opacity: 0;
+}
+1%{
+  opacity: 0;
+}
+16%{
+  opacity: 0.7;
+}
+81%{
+  opacity: 0.7;
+}
+96%{
+  opacity: 0;
+}
+100% {
+  transform: translateY(${offset}px);
+  opacity: 0;
+}
 `;
 
-const moveSlideHor = keyframes`
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-200px);
-  }
-`;
-
-const animationMoveSlideVert = css`
-  animation: ${moveSlideVert} 30s linear infinite;
-`;
-
-const animationMoveSlideHor = css`
-  animation: ${moveSlideHor} 30s linear infinite;
+const moveSlideHor = (offset) => keyframes`
+0% {
+  transform: translateX(0);
+  opacity: 0;
+}
+1%{
+  opacity: 0;
+}
+15%{
+  opacity: 0.7;
+}
+85%{
+  opacity: 0.7;
+}
+95%{
+  opacity: 0;
+}
+100% {
+  transform: translateX(${offset}px);
+  opacity: 0;
+}
 `;
 
 const AnimatedImageVert = styled.img`
   width: 100%;
-  minheight: 100%;
-  objectfit: cover;
+  min-height: 100%;
+  object-fit: cover;
   position: absolute;
-  opacity: 0.7;
-  ${animationMoveSlideVert}
+  opacity: 0;
+  ${({ offset, $stime }) => css`
+    animation: ${moveSlideVert(offset)} ${$stime + 1}s linear infinite;
+  `}
 `;
 
 const AnimatedImageHor = styled.img`
   height: 100%;
   objectfit: cover;
   position: absolute;
-  opacity: 0.7;
-  ${animationMoveSlideHor}
+  opacity: 0;
+  ${({ offset, $stime }) => css`
+    animation: ${moveSlideHor(offset)} ${$stime + 1}s linear infinite;
+  `}
 `;
 
 export default function Slideshow(props) {
+  const [stime] = useState(20);
   const [slides, setSlides] = useState([]);
   const [slideNo, setSlideNo] = useState(0);
   const [slideKey, setSlideKey] = useState(1);
-
   const slideRef = useRef(null);
-
   const [imgSize, setImgSize] = useState({
     x: 0,
     y: 0,
   });
-
   const [windowSize, setWindowSize] = useState({
     x: 0,
     y: 0,
   });
-
   const [offset, setOffset] = useState(0);
+
+  const [timer, setTimer] = useState(stime);
 
   function importAll(r) {
     let images = {};
@@ -77,13 +100,13 @@ export default function Slideshow(props) {
   }
 
   function changeSlide(dir, e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (dir > 0) {
       slideNo < slides.length - 1 ? setSlideNo(slideNo + dir) : setSlideNo(0);
     } else {
       slideNo > 0 ? setSlideNo(slideNo + dir) : setSlideNo(slides.length - 1);
     }
-    setSlideKey(slideKey * -1)
+    setSlideKey(slideKey * -1);
   }
 
   useEffect(() => {
@@ -123,30 +146,52 @@ export default function Slideshow(props) {
   }, []);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer === 0) {
+          setTimer(stime);
+        } else {
+          return prevTimer - 1;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setTimer(stime);
+    // eslint-disable-next-line
+  }, [offset, slideNo]);
+
+  useEffect(() => {
+    if (timer === 0) changeSlide(1);
+    // eslint-disable-next-line
+  }, [timer]);
+
+  useEffect(() => {
+    const currentRef = slideRef.current;
     const handleImageLoad = () => {
       setImgSize({
         ...imgSize,
-        x: slideRef.current.width,
-        y: slideRef.current.height,
+        x: currentRef.width,
+        y: currentRef.height,
       });
     };
 
-    if (slideRef.current) {
-      slideRef.current.addEventListener("load", handleImageLoad);
+    if (currentRef) {
+      currentRef.addEventListener("load", handleImageLoad);
     }
 
     return () => {
-      if (slideRef.current) {
-        slideRef.current.removeEventListener("load", handleImageLoad);
+      if (currentRef) {
+        currentRef.removeEventListener("load", handleImageLoad);
       }
     };
 
     // eslint-disable-next-line
   }, [slides]);
-
-  const testB = () => {
-    console.log("test button");
-  };
 
   useEffect(() => {
     windowSize.x > windowSize.y
@@ -158,10 +203,6 @@ export default function Slideshow(props) {
     // eslint-disable-next-line
   }, [imgSize, windowSize]);
 
-  useEffect(() => {
-    console.log(offset);
-  }, [offset]);
-
   return (
     <div className={styles.slideshow}>
       {windowSize.x > windowSize.y ? (
@@ -170,6 +211,8 @@ export default function Slideshow(props) {
           alt="zdjęcie pokazowe"
           ref={slideRef}
           key={slideKey}
+          offset={offset}
+          $stime={stime}
         />
       ) : (
         <AnimatedImageHor
@@ -177,6 +220,8 @@ export default function Slideshow(props) {
           alt="zdjęcie pokazowe"
           ref={slideRef}
           key={slideKey}
+          offset={offset}
+          $stime={stime}
         />
       )}
 
@@ -185,24 +230,32 @@ export default function Slideshow(props) {
           onClick={(e) => changeSlide(-1, e)}
           className={styles.slideshowButtonsButton}
         >
-          Prev
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="currentColor"
+            className="bi bi-caret-left-fill"
+            viewBox="0 0 16 16"
+          >
+            <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+          </svg>
         </button>
         <button
           onClick={(e) => changeSlide(1, e)}
           className={styles.slideshowButtonsButton}
         >
-          Next
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="currentColor"
+            className="bi bi-caret-right-fill"
+            viewBox="0 0 16 16"
+          >
+            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+          </svg>
         </button>
-        <button onClick={testB} className={styles.slideshowButtonsButton}>
-          Test
-        </button>
-      </div>
-      <div className={styles.slideshowData}>
-        <p className={styles.slideshowDataP}>imgX: {imgSize.x}</p>
-        <p className={styles.slideshowDataP}>imgY: {imgSize.y}</p>
-        <p className={styles.slideshowDataP}>wX: {windowSize.x}</p>
-        <p className={styles.slideshowDataP}>wY: {windowSize.y}</p>
-        <p className={styles.slideshowDataP}>offset: {offset}</p>
       </div>
     </div>
   );
