@@ -1,80 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Slideshow.module.scss";
-import styled, { keyframes, css } from "styled-components";
-
-const moveSlideVert = (offset) => keyframes`
-0% {
-  transform: translateY(0);
-  opacity: 0;
-}
-1%{
-  opacity: 0;
-}
-16%{
-  opacity: 0.7;
-}
-81%{
-  opacity: 0.7;
-}
-96%{
-  opacity: 0;
-}
-100% {
-  transform: translateY(${offset}px);
-  opacity: 0;
-}
-`;
-
-const moveSlideHor = (offset) => keyframes`
-0% {
-  transform: translateX(0);
-  opacity: 0;
-}
-1%{
-  opacity: 0;
-}
-15%{
-  opacity: 0.7;
-}
-85%{
-  opacity: 0.7;
-}
-95%{
-  opacity: 0;
-}
-100% {
-  transform: translateX(${offset}px);
-  opacity: 0;
-}
-`;
-
-const AnimatedImageVert = styled.img`
-  width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  position: absolute;
-  opacity: 0;
-  ${({ offset, $stime }) => css`
-    animation: ${moveSlideVert(offset)} ${$stime + 1}s linear infinite;
-  `}
-`;
-
-const AnimatedImageHor = styled.img`
-  height: 100%;
-  objectfit: cover;
-  position: absolute;
-  opacity: 0;
-  ${({ offset, $stime }) => css`
-    animation: ${moveSlideHor(offset)} ${$stime + 1}s linear infinite;
-  `}
-`;
+import { AnimatedImageVert, AnimatedImageHor } from "./styledComponents";
 
 export default function Slideshow(props) {
   const [stime] = useState(20);
+  const [timer, setTimer] = useState(stime);
+
   const [slides, setSlides] = useState([]);
   const [slideNo, setSlideNo] = useState(0);
-  const [slideKey, setSlideKey] = useState(1);
-  const slideRef = useRef(null);
+
   const [imgSize, setImgSize] = useState({
     x: 0,
     y: 0,
@@ -85,7 +19,7 @@ export default function Slideshow(props) {
   });
   const [offset, setOffset] = useState(0);
 
-  const [timer, setTimer] = useState(stime);
+  const slideRef = useRef(null);
 
   function importAll(r) {
     let images = {};
@@ -106,7 +40,6 @@ export default function Slideshow(props) {
     } else {
       slideNo > 0 ? setSlideNo(slideNo + dir) : setSlideNo(slides.length - 1);
     }
-    setSlideKey(slideKey * -1);
   }
 
   useEffect(() => {
@@ -139,13 +72,6 @@ export default function Slideshow(props) {
     });
     window.addEventListener("resize", updateSize);
 
-    return () => {
-      window.removeEventListener("resize", updateSize);
-    };
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer === 0) {
@@ -156,7 +82,10 @@ export default function Slideshow(props) {
       });
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      window.removeEventListener("resize", updateSize);
+      clearInterval(interval);
+    };
     // eslint-disable-next-line
   }, []);
 
@@ -203,6 +132,32 @@ export default function Slideshow(props) {
     // eslint-disable-next-line
   }, [imgSize, windowSize]);
 
+  const prevButtonIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="currentColor"
+      className="bi bi-caret-left-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+    </svg>
+  );
+
+  const nextButtonIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill="currentColor"
+      className="bi bi-caret-right-fill"
+      viewBox="0 0 16 16"
+    >
+      <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+    </svg>
+  );
+
   return (
     <div className={styles.slideshow}>
       {windowSize.x > windowSize.y ? (
@@ -210,7 +165,7 @@ export default function Slideshow(props) {
           src={slides[slideNo]}
           alt="zdjęcie pokazowe"
           ref={slideRef}
-          key={slideKey}
+          key={slideNo}
           offset={offset}
           $stime={stime}
         />
@@ -219,7 +174,7 @@ export default function Slideshow(props) {
           src={slides[slideNo]}
           alt="zdjęcie pokazowe"
           ref={slideRef}
-          key={slideKey}
+          key={slideNo}
           offset={offset}
           $stime={stime}
         />
@@ -230,31 +185,13 @@ export default function Slideshow(props) {
           onClick={(e) => changeSlide(-1, e)}
           className={styles.slideshowButtonsButton}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            className="bi bi-caret-left-fill"
-            viewBox="0 0 16 16"
-          >
-            <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
-          </svg>
+          {prevButtonIcon}
         </button>
         <button
           onClick={(e) => changeSlide(1, e)}
           className={styles.slideshowButtonsButton}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            className="bi bi-caret-right-fill"
-            viewBox="0 0 16 16"
-          >
-            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
-          </svg>
+          {nextButtonIcon}
         </button>
       </div>
     </div>
