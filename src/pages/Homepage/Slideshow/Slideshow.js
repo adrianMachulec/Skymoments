@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Slideshow.module.scss";
-import { AnimatedImageVert, AnimatedImageHor } from "./styledComponents";
+import {
+  AnimatedImageVert,
+  AnimatedImageHor,
+  SlideshowContainer,
+} from "./styledComponents";
 
 export default function Slideshow(props) {
   const [stime] = useState(20);
@@ -53,6 +57,14 @@ export default function Slideshow(props) {
         x: slideRef.current.width,
         y: slideRef.current.height,
       });
+
+      // "Resetuj" animację poprzez dodanie/aktualizację klasy
+      const animatedElement = slideRef.current;
+
+      // Dodaj klasę do zresetowania animacji
+      animatedElement.classList.remove("slide-animation");
+      void animatedElement.offsetWidth; // Wymuszenie reflow
+      animatedElement.classList.add("slide-animation");
     }
 
     setSlides(
@@ -159,11 +171,11 @@ export default function Slideshow(props) {
   );
 
   return (
-    <div className={styles.slideshow}>
+    <div className={styles.slideshow} key={windowSize}>
       {windowSize.x > windowSize.y ? (
         <AnimatedImageVert
           src={slides[slideNo]}
-          alt="zdjęcie pokazowe"
+          alt="zdjęcie pokazowe vert"
           ref={slideRef}
           key={slideNo}
           offset={offset}
@@ -172,7 +184,7 @@ export default function Slideshow(props) {
       ) : (
         <AnimatedImageHor
           src={slides[slideNo]}
-          alt="zdjęcie pokazowe"
+          alt="zdjęcie pokazowe hor"
           ref={slideRef}
           key={slideNo}
           offset={offset}

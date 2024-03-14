@@ -46,6 +46,17 @@ export default function Navbar(props) {
           </li>
           <li className={styles.menuElement}>
             <NavLink
+              to="/opinions"
+              className={({ isActive }) =>
+                isActive ? styles.menuElementLinkActive : styles.menuElementLink
+              }
+              end
+            >
+              Opinie
+            </NavLink>
+          </li>
+          <li className={styles.menuElement}>
+            <NavLink
               to="/contact"
               className={({ isActive }) =>
                 isActive ? styles.menuElementLinkActive : styles.menuElementLink

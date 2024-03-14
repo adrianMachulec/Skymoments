@@ -3,7 +3,12 @@
 .navbar {
   // background-color: red;
   display: flex;
-  height: 12vh;
+  justify-content: center;
+  height: 128px;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  margin-top: 8px;
 
   &LogoContainer {
     // background-color: antiquewhite;
@@ -13,7 +18,7 @@
   &MenuContainer {
     // background-color: brown;
     display: flex;
-    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -23,17 +28,17 @@
   margin: 0;
   padding: 0;
   display: flex;
-  width: 100%;
   justify-content: space-around;
   align-items: center;
 
   &Element {
     // background-color: aqua;
+    margin: 0 64px;
     &Link {
       text-decoration: none;
-      color: black;
-      font-family: 'Lobster', sans-serif;
-      font-size: x-large;
+      color: white;
+      // font-family: 'Lobster', sans-serif;
+      font-size: large;
 
       &Active{
         @extend .menuElementLink;
@@ -45,8 +50,7 @@
 
 .logo {
   z-index: 2;
-  margin: 8px;
-  height: 16vh;
+  height: 128px;
   // background-color: rgba(255, 255, 255, 0.2);
   // backdrop-filter: blur(2px);
   // padding: 4px;

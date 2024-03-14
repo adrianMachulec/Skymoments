@@ -53,6 +53,8 @@ const AnimatedImageVert = styled.img`
   position: absolute;
   opacity: 0;
   ${({ offset, $stime }) => css`
+    transform: translateZ(0);
+    will-change: transform;
     animation: ${moveSlideVert(offset)} ${$stime + 1}s linear infinite;
   `}
 `;
@@ -63,8 +65,14 @@ const AnimatedImageHor = styled.img`
   position: absolute;
   opacity: 0;
   ${({ offset, $stime }) => css`
+    transform: translateZ(0);
+    will-change: transform;
     animation: ${moveSlideHor(offset)} ${$stime + 1}s linear infinite;
   `}
 `;
 
-export {AnimatedImageVert, AnimatedImageHor}
+const SlideshowContainer = styled.div`
+    perspective: 1000px;
+  `;
+
+export {AnimatedImageVert, AnimatedImageHor, SlideshowContainer}
